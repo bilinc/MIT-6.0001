@@ -180,8 +180,22 @@ def update_hand(hand, word):
 	returns: dictionary (string -> int)
 	"""
 
-	pass  # TO DO... Remove this line when you implement this function
+	word = word.lower()
+	new_hand = hand.copy()
 
+	for w in word:
+		# Check if letter is actually part of the hand
+		if not(new_hand.get(w, 'ignored') == 'ignored'):
+			
+			# Removes the used letter from the hand, sets it to zero if no uses are left
+			new_hand[w] = max(new_hand[w] - 1, 0)
+			
+			# Deletes the letter if it is used up from the hand
+			if new_hand[w] == 0:
+				del new_hand[w]
+
+	print(new_hand, '\n')
+	return new_hand
 #
 # Problem #3: Test word validity
 #
