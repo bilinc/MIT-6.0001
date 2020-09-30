@@ -4,7 +4,7 @@
 # Created by: Kevin Luu <luuk> and Jenna Wiens <jwiens>
 #
 # Name          : Bilin Chen
-# Collaborators : N/A
+# Collaborators : None
 # Time spent    : TBD
 
 import math
@@ -12,11 +12,12 @@ import random
 import string
 
 VOWELS = 'aeiou'
+WILDCARD = '*'
 CONSONANTS = 'bcdfghjklmnpqrstvwxyz'
 HAND_SIZE = 7
 
 SCRABBLE_LETTER_VALUES = {
-	'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4, 'g': 2, 'h': 4, 'i': 1, 'j': 8, 'k': 5, 'l': 1, 'm': 3, 'n': 1, 'o': 1, 'p': 3, 'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 1, 'v': 4, 'w': 4, 'x': 8, 'y': 4, 'z': 10
+	'a': 1, 'b': 3, 'c': 3, 'd': 2, 'e': 1, 'f': 4, 'g': 2, 'h': 4, 'i': 1, 'j': 8, 'k': 5, 'l': 1, 'm': 3, 'n': 1, 'o': 1, 'p': 3, 'q': 10, 'r': 1, 's': 1, 't': 1, 'u': 1, 'v': 4, 'w': 4, 'x': 8, 'y': 4, 'z': 10, '*': 0,
 }
 
 # -----------------------------------
@@ -146,13 +147,18 @@ def deal_hand(n):
 	"""
 	
 	hand={}
-	num_vowels = int(math.ceil(n / 3))
+	# Remove a vowel slot for the wildcard
+	num_vowels = int(math.ceil(n / 3)) - 1
 
 	for i in range(num_vowels):
 		x = random.choice(VOWELS)
 		hand[x] = hand.get(x, 0) + 1
 	
-	for i in range(num_vowels, n):    
+	# Add the wildcard
+	hand[WILDCARD] = 1
+
+	# The wildcard takes up a spot in num_vowels so it has to be readded
+	for i in range(num_vowels + 1, n):
 		x = random.choice(CONSONANTS)
 		hand[x] = hand.get(x, 0) + 1
 	
@@ -211,7 +217,34 @@ def is_valid_word(word, hand, word_list):
 	returns: boolean
 	"""
 
-	pass  # TO DO... Remove this line when you implement this function
+	word = word.lower()
+	# gets the frequency of a letter in the word in a dict
+	letter_count = get_frequency_dict(word)
+
+	if WILDCARD in word:
+		index = word.find(WILDCARD)
+
+		for v in VOWELS:
+			possible_word = word[0:index] + v + word[index+1:]
+
+			if possible_word in word_list:
+				return True
+
+		# If none of the possible words are in the list return false
+		return False
+
+	else:
+
+		if word in word_list:
+			for w in word:		
+				# Checks if the number of a letter in the word has the same number or more in the hand
+				if not(letter_count[w] <= hand.get(w,0)):
+					return False
+
+			return True
+
+		else:
+			return False
 
 #
 # Problem #5: Playing a hand
@@ -223,8 +256,12 @@ def calculate_handlen(hand):
 	hand: dictionary (string-> int)
 	returns: integer
 	"""
+	hand_len = 0
+	for key in hand.keys():
+		hand_len += hand[key]
 	
-	pass  # TO DO... Remove this line when you implement this function
+	return hand_len
+
 
 def play_hand(hand, word_list):
 
@@ -257,39 +294,43 @@ def play_hand(hand, word_list):
 	  
 	"""
 	
-	# BEGIN PSEUDOCODE <-- Remove this comment when you implement this function
 	# Keep track of the total score
 	
 	# As long as there are still letters left in the hand:
-	
+	while len(hand.keys()) > 0:
+
 		# Display the hand
-		
+		print('Current hand:', end=' ')
+		display_hand(hand)
+
 		# Ask user for input
-		
+		user_input = input("Enter word, or '!!' to indicate that you are finished: ")
 		# If the input is two exclamation points:
-		
+		if user_input == '!!':
 			# End the game (break out of the loop)
-
-			
+			break
+		
 		# Otherwise (the input is not two exclamation points):
+		# If the word is valid:
+		elif is_valid_word(user_input, hand, load_words()):
+			# Tell the user how many points the word earned,
+			# and the updated total score
+			print('Total: ' + str(get_word_score(user_input, calculate_handlen(hand))) + ' points')
+			print() # print empty line
 
-			# If the word is valid:
-
-				# Tell the user how many points the word earned,
-				# and the updated total score
-
-			# Otherwise (the word is not valid):
-				# Reject invalid word (print a message)
-				
-			# update the user's hand by removing the letters of their inputted word
-			
+		# Otherwise (the word is not valid):
+		# Reject invalid word (print a message)
+		else:
+			print('That is not a valid word. Please choose another word')
+		# update the user's hand by removing the letters of their inputted word
+		hand = update_hand(hand, user_input)
 
 	# Game is over (user entered '!!' or ran out of letters),
 	# so tell user the total score
 
 	# Return the total score as result of function
 
-
+play_hand(deal_hand(HAND_SIZE), load_words())
 
 #
 # Problem #6: Playing a game
