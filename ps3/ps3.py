@@ -200,7 +200,6 @@ def update_hand(hand, word):
 			if new_hand[w] == 0:
 				del new_hand[w]
 
-	print(new_hand, '\n')
 	return new_hand
 #
 # Problem #3: Test word validity
@@ -295,7 +294,7 @@ def play_hand(hand, word_list):
 	"""
 	
 	# Keep track of the total score
-	
+	total_score = 0
 	# As long as there are still letters left in the hand:
 	while len(hand.keys()) > 0:
 
@@ -308,14 +307,18 @@ def play_hand(hand, word_list):
 		# If the input is two exclamation points:
 		if user_input == '!!':
 			# End the game (break out of the loop)
+
 			break
 		
 		# Otherwise (the input is not two exclamation points):
 		# If the word is valid:
 		elif is_valid_word(user_input, hand, load_words()):
 			# Tell the user how many points the word earned,
+			print('"%s" earned %s points.' % (user_input, str(get_word_score(user_input, calculate_handlen(hand)))), end=' ')
+
 			# and the updated total score
-			print('Total: ' + str(get_word_score(user_input, calculate_handlen(hand))) + ' points')
+			total_score += get_word_score(user_input, calculate_handlen(hand))
+			print('Total score: ' + str(total_score) + ' points')
 			print() # print empty line
 
 		# Otherwise (the word is not valid):
@@ -327,8 +330,13 @@ def play_hand(hand, word_list):
 
 	# Game is over (user entered '!!' or ran out of letters),
 	# so tell user the total score
-
+	if len(hand.keys()) == 0:
+		print('Ran out of letters.', end=' ')
+	
+	print('Final score: {} points.'.format(str(total_score)))
 	# Return the total score as result of function
+	return total_score
+
 
 play_hand(deal_hand(HAND_SIZE), load_words())
 
