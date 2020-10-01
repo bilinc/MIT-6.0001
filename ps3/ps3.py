@@ -292,7 +292,7 @@ def play_hand(hand, word_list):
 	  returns: the total score for the hand
 	  
 	"""
-	
+	word_list = load_words()
 	# Keep track of the total score
 	total_score = 0
 	# As long as there are still letters left in the hand:
@@ -312,7 +312,7 @@ def play_hand(hand, word_list):
 		
 		# Otherwise (the input is not two exclamation points):
 		# If the word is valid:
-		elif is_valid_word(user_input, hand, load_words()):
+		elif is_valid_word(user_input, hand, word_list):
 			# Tell the user how many points the word earned,
 			print('"%s" earned %s points.' % (user_input, str(get_word_score(user_input, calculate_handlen(hand)))), end=' ')
 
@@ -372,7 +372,16 @@ def substitute_hand(hand, letter):
 	returns: dictionary (string -> int)
 	"""
 	
-	pass  # TO DO... Remove this line when you implement this function
+	# 1. check if the letter is in the hand
+	# if it is then go ahead and substitute it
+
+	# if it is not then ignore and just redisplay the hand
+
+	# 2. check what letters are in the current hand and remove them from the possible set of letters
+
+	# 3. generate a new random letter
+
+	# 4. switch out the old letter with the new. all copies of it should be replaced
 	   
 	
 def play_game(word_list):
@@ -406,6 +415,37 @@ def play_game(word_list):
 	word_list: list of lowercase strings
 	"""
 	
+	# ask user for number of hands to play
+
+	# present the user with a hand
+		# save the hand in a new variable as not to mutate it
+
+	# ask the user if they want to substitute a letter
+	# substitute if they say yes
+
+	# if they say no nothing happens, the substitution is saved for next time
+
+	# a substitution shall not be asked again if it has been used
+
+	# total score for the hand will be saved
+	
+	# after a played hand ask if they want to replay it
+	# if yes then redisplay the umutated hand
+	# do not give option to substitute
+
+	# only one replay is allowed per hand
+
+	# compare new score with old score
+	
+	# display and save the highest score
+
+	# repeat until all hands are played
+
+	# end game (display total score for all hands)
+
+
+
+
 	print("play_game not implemented.") # TO DO... Remove this line when you implement this function
 	
 
