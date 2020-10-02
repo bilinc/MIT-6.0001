@@ -338,7 +338,7 @@ def play_hand(hand, word_list):
 	return total_score
 
 
-play_hand(deal_hand(HAND_SIZE), load_words())
+# play_hand(deal_hand(HAND_SIZE), load_words())
 
 #
 # Problem #6: Playing a game
@@ -372,16 +372,31 @@ def substitute_hand(hand, letter):
 	returns: dictionary (string -> int)
 	"""
 	
+	sub_hand = hand.copy()
+
+
 	# 1. check if the letter is in the hand
-	# if it is then go ahead and substitute it
-
 	# if it is not then ignore and just redisplay the hand
+	if not(letter in sub_hand):
+		return hand
 
+	# if it is then go ahead and substitute it
+	else:
 	# 2. check what letters are in the current hand and remove them from the possible set of letters
-
+		apet = (VOWELS + CONSONANTS).lower()
+		apet.replace(letter, '')
 	# 3. generate a new random letter
+		sub_letter = random.choice(apet)
+
 
 	# 4. switch out the old letter with the new. all copies of it should be replaced
+		sub_hand[sub_letter] = hand[letter]
+		del sub_hand[letter]
+
+		return sub_hand
+	
+
+
 	   
 	
 def play_game(word_list):

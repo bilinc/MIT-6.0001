@@ -247,6 +247,20 @@ def test_wildcard(word_list):
     if not failure:
         print("SUCCESS: test_wildcard()")
 
+def test_substitute_hand():
+    # test 1
+    hand = {'x': 1, 'o': 1, 'z': 1, 'p':2, 't':1, 'a':1}
+
+    sub_hand = substitute_hand(hand, 'x')
+    if 'x' in sub_hand:
+        print("FAILURE test_substitute_hand()")
+        print("Expected the hand to no longer contain 'x'.")
+        
+        return # exit function
+
+    print("SUCCESS test_substitute_hand()")
+
+
 
 word_list = load_words()
 print("----------------------------------------------------------------------")
@@ -261,4 +275,8 @@ test_is_valid_word(word_list)
 print("----------------------------------------------------------------------")
 print("Testing wildcards...")
 test_wildcard(word_list)
+print("----------------------------------------------------------------------")
+print("Testing substitute hand (own test)...")
+test_substitute_hand()
+
 print("All done!")
