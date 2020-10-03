@@ -248,9 +248,10 @@ def test_wildcard(word_list):
         print("SUCCESS: test_wildcard()")
 
 def test_substitute_hand():
-    # test 1
+    
     hand = {'x': 1, 'o': 1, 'z': 1, 'p':2, 't':1, 'a':1}
-
+    
+    # test 1
     sub_hand = substitute_hand(hand, 'x')
     if 'x' in sub_hand:
         print("FAILURE test_substitute_hand()")
@@ -258,6 +259,13 @@ def test_substitute_hand():
         
         return # exit function
 
+    # test 2
+    sub_hand = substitute_hand(hand, 'e')
+
+    if not(sub_hand == hand):
+        print("FAILURE test_substitute_hand")
+        print("Expected the hand to be unchanged since the substitute letter is not in the hand.")
+    
     print("SUCCESS test_substitute_hand()")
 
 

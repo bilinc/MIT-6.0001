@@ -292,7 +292,7 @@ def play_hand(hand, word_list):
 	  returns: the total score for the hand
 	  
 	"""
-	word_list = load_words()
+	
 	# Keep track of the total score
 	total_score = 0
 	# As long as there are still letters left in the hand:
@@ -303,7 +303,7 @@ def play_hand(hand, word_list):
 		display_hand(hand)
 
 		# Ask user for input
-		user_input = input("Enter word, or '!!' to indicate that you are finished: ")
+		user_input = input("Please enter a word, or '!!' to indicate that you are finished: ")
 		# If the input is two exclamation points:
 		if user_input == '!!':
 			# End the game (break out of the loop)
@@ -325,6 +325,7 @@ def play_hand(hand, word_list):
 		# Reject invalid word (print a message)
 		else:
 			print('That is not a valid word. Please choose another word')
+			print()	# prints empty line
 		# update the user's hand by removing the letters of their inputted word
 		hand = update_hand(hand, user_input)
 
@@ -429,39 +430,94 @@ def play_game(word_list):
 
 	word_list: list of lowercase strings
 	"""
-	
+	print('-----------------------')
+	print(' PLAYING THE WORD GAME ')
+	print('-----------------------')
+	print()
 	# ask user for number of hands to play
-
-	# present the user with a hand
-		# save the hand in a new variable as not to mutate it
-
-	# ask the user if they want to substitute a letter
-	# substitute if they say yes
-
-	# if they say no nothing happens, the substitution is saved for next time
-
-	# a substitution shall not be asked again if it has been used
-
-	# total score for the hand will be saved
+	while True:
+		try:
+			num_hands = int(input("Enter total number of hands: "))
+		except ValueError:
+			print('Sorry but the input was not of the correct format. Please enter a number.\n')
+			# try again
+			continue
+		else:
+			# successfully parsed
+			break
 	
-	# after a played hand ask if they want to replay it
-	# if yes then redisplay the umutated hand
-	# do not give option to substitute
-
-	# only one replay is allowed per hand
-
-	# compare new score with old score
+	played_hands = 0		# number of played hands
 	
-	# display and save the highest score
+	substitute_counter = 0 	# number of times substitute letter has been used
+	
+	replay_counter = 0		# number of times replay of hand has been used
 
-	# repeat until all hands are played
+	all_scores = []			# storing all the scores to sum up at the end
+	
+	# Play until all hands are finished
+	while played_hands < num_hands:
+		print('----------')
+		print('Playing hand %s.' % (str(played_hands + 1)))
+		print('----------\n')
+		# present the user with a hand
+		hand = deal_hand(HAND_SIZE)
+			# save the hand in a new variable as not to mutate it
+		
+		change = ''
+		# Allow substitue of letter only once for all hands
+		if substitute_counter < 1:
+			# ask the user if they want to substitute a letter
+			print('Current hand:', end=' ')
+			display_hand(hand)
+
+			while not(change == 'yes' or change =='no'):
+				change = input('Would you like to substitute a letter? ').lower()
+				
+
+				if not(change == 'yes' or change == 'no'):
+					print(">Please type 'yes' or 'no'!")
+
+			# if they say no nothing happens, the substitution is saved for next time
+			if change == 'yes':
+				# ask for letter to replace
+				letter = input('Which letter would you like to replace: ').lower()
+				print()	# print empty line
+				# replace letter in hand
+				hand = substitute_hand(hand, letter)
+
+				# a substitution shall not be asked again if it has been used
+				substitute_counter += 1
+			# if they don't wanna replace a letter the hand is unchanged 
+			else:
+				hand = hand
+			
+		hand_copy = hand.copy()		# saved in for replay case
+		score = play_hand(hand, word_list)	# play the hand and returns a score (will also display the hand)
+		score_replay = 0
+
+		# after a played hand ask if they want to replay it
+		if replay_counter < 1:
+			replay = input('Would you like to replay hand: ').lower()
+		
+			# if yes then redisplay the umutated hand
+			# do not give option to substitute
+			if replay == 'yes':
+				# only one replay is allowed per hand
+				replay_counter += 1
+				print()
+				score_replay = play_hand(hand, word_list)	# save the score from the replay hand
+		print()
+		# compare scores and save the highest one
+		all_scores.append(max(score, score_replay))
+
+		played_hands += 1
 
 	# end game (display total score for all hands)
-
-
-
-
-	print("play_game not implemented.") # TO DO... Remove this line when you implement this function
+	total_score = 0
+	for s in all_scores:
+		total_score += s
+	print('----------')
+	print('Total score over all hands: %d' % (total_score))	
 	
 
 
