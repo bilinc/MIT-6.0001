@@ -22,21 +22,50 @@ def get_permutations(sequence):
     Note: depending on your implementation, you may return the permutations in
     a different order than what is listed here.
     '''
+    def get_permutations_helper(some_list):
+    	permu = []
+
+    	for item in some_list:
+    		for i in range(len(item)+1):
+    			if len(item) == 1:	# base case
+    				print('item:', item)
+    				print()
+    				permu.append(item)
+
+    			else:				# recursion attempt
+	    			sliced_letter = item[0]
+	    			the_rest = get_permuations_help(list(item[1:])) # item[1:]
+	    			
+	    			foo = the_rest[:i] + sliced_letter + the_rest[i:]
+	    			permu.append(foo)
+
+    	return permu
+    	
+
     permutations = []
     if len(sequence) == 1:
     	# base case
-    	permutations.append(sequence)
-    	return permutations
+    	# permutations.append(sequence)
+    	return sequence
 
     else:
-    	first = sequence[0]
-    	piece = sequence[1:]
 
-    	for i in range(len(piece)+1):
-    		permu = piece[:i] + first + piece[i:]
-    		print(permu)
-    		print()
+    	return get_permutations_helper(list(sequence))
 
+    # elif len(sequence) == 2:
+    # 	first = sequence[0]
+    # 	piece = sequence[1:]
+
+    # 	for i in range(len(piece)+1):
+    # 		foo = piece[:i] + first + piece[i:]
+    # 		permutations.append(foo)
+    # 		# print(foo)
+    		
+    # 		# print()
+    # 	print(permutations)
+
+    # else:
+    # 	for items in 
 
 
 
@@ -52,10 +81,10 @@ if __name__ == '__main__':
 #    to be three characters or fewer as you will have n! permutations for a 
 #    sequence of length n)
 
-    test1 = 'a'
-    print('Input:', test1)
-    print('Expected Output:', ['abc', 'acb', 'bac', 'bca', 'cab', 'cba'])
+    # test1 = 'a'
+    # print('Input:', test1)
+    # print('Expected Output:', ['abc', 'acb', 'bac', 'bca', 'cab', 'cba'])
     # print('Actual Output', get_permutations(test1))
 
-    get_permutations('abc')
+    print(get_permutations('abc'))
 
