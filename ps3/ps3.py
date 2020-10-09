@@ -5,7 +5,7 @@
 #
 # Name          : Bilin Chen
 # Collaborators : None
-# Time spent    : TBD
+# Time spent    : 5 days
 
 import math
 import random
@@ -519,7 +519,6 @@ def play_game(word_list):
 	print('----------')
 	print('Total score over all hands: %d' % (total_score))	
 	
-
 
 #
 # Build data structures used for entire session and play game
