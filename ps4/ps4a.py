@@ -31,10 +31,10 @@ def get_permutations(sequence):
 					print('item:', item)
 					print()
 					permu.append(item)
-					return permu
+					return item
 				else:				# recursion attempt
 					sliced_letter = item[0]
-					the_rest = get_permuations_help(list(item[1:])) # item[1:]
+					the_rest = get_permutations_helper([item[1:]]) # item[1:]
 					
 					foo = the_rest[:i] + sliced_letter + the_rest[i:]
 					permu.append(foo)
@@ -48,8 +48,9 @@ def get_permutations(sequence):
 		return sequence
 
 	else:
-
-		return get_permutations_helper(list(sequence))
+		sequence_list = []
+		sequence_list.append(sequence)
+		return get_permutations_helper(sequence_list)
 
 	# elif len(sequence) == 2:
 	# 	first = sequence[0]
