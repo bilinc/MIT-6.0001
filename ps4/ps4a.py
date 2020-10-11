@@ -22,52 +22,29 @@ def get_permutations(sequence):
 	Note: depending on your implementation, you may return the permutations in
 	a different order than what is listed here.
 	'''
-	def get_permutations_helper(some_list):
-		permu = []
 
-		for item in some_list:
-			for i in range(len(item)+1):
-				if len(item) == 1:	# base case
-					print('item:', item)
-					print()
-					permu.append(item)
-					return item
-				else:				# recursion attempt
-					sliced_letter = item[0]
-					the_rest = get_permutations_helper([item[1:]]) # item[1:]
-					
-					foo = the_rest[:i] + sliced_letter + the_rest[i:]
-					permu.append(foo)
-					
-					return get_permutations_helper(permu)
-	
-	permutations = []
 	if len(sequence) == 1:
 		# base case
-		# permutations.append(sequence)
-		return sequence
+		permutations = []
+		permutations.append(sequence)
+		
+		return permutations
 
 	else:
-		sequence_list = []
-		sequence_list.append(sequence)
-		return get_permutations_helper(sequence_list)
+		first_character = sequence[0]
+		rest_characters = sequence[1:]
 
-	# elif len(sequence) == 2:
-	# 	first = sequence[0]
-	# 	piece = sequence[1:]
+		permutations = get_permutations(rest_characters)
 
-	# 	for i in range(len(piece)+1):
-	# 		foo = piece[:i] + first + piece[i:]
-	# 		permutations.append(foo)
-	# 		# print(foo)
-			
-	# 		# print()
-	# 	print(permutations)
+		new_permutations = []
 
-	# else:
-	# 	for items in 
+		for term in permutations:
+			for i in range(len(term)+1):
+				new_term = term[:i] + first_character + term[i:]
 
+				new_permutations.append(new_term)
 
+		return new_permutations
 
 
 if __name__ == '__main__':
@@ -80,11 +57,26 @@ if __name__ == '__main__':
 #    # Put three example test cases here (for your sanity, limit your inputs
 #    to be three characters or fewer as you will have n! permutations for a 
 #    sequence of length n)
+	
+	print('========', 'Test 1', '========')
+	test1 = 'a'
+	print('Input:', test1)
+	print('Expected Output:', ['a'])
+	print('Actual Output', get_permutations(test1))
+	print()
 
-	# test1 = 'a'
-	# print('Input:', test1)
-	# print('Expected Output:', ['abc', 'acb', 'bac', 'bca', 'cab', 'cba'])
-	# print('Actual Output', get_permutations(test1))
+	print('========', 'Test 2', '========')
+	test2 = 'abc'
+	print('Input:', test2)
+	print('Expected Output:', ['abc', 'acb', 'bac', 'bca', 'cab', 'cba'])
+	print('Actual Output', get_permutations(test2))
+	print()
 
-	print(get_permutations('abc'))
-
+	print('========', 'Test 3', '========')
+	test3 = 'xyz'
+	print('Input:', test3)
+	print('Expected Output:', ['xyz', 'yxz', 'yzx', 'xzy', 'zxy', 'zyx'])
+	print('Actual Output', get_permutations(test3))
+	print()
+	
+	print(get_permutations('abcd'))
