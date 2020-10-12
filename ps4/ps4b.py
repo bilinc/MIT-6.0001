@@ -70,7 +70,8 @@ class Message(object):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        self.message_text = text
+        self.valid_words = load_words(WORDLIST_FILENAME)
 
     def get_message_text(self):
         '''
@@ -78,7 +79,7 @@ class Message(object):
         
         Returns: self.message_text
         '''
-        pass #delete this line and replace with your code here
+        return self.message_text
 
     def get_valid_words(self):
         '''
@@ -87,7 +88,9 @@ class Message(object):
         
         Returns: a COPY of self.valid_words
         '''
-        pass #delete this line and replace with your code here
+        self.valid_words_copy = self.valid_words.copy()
+
+        return self.valid_words_copy
 
     def build_shift_dict(self, shift):
         '''
@@ -221,4 +224,5 @@ if __name__ == '__main__':
 
     #TODO: best shift value and unencrypted story 
     
-    pass #delete this line and replace with your code here
+    msg = Message('hello there my world')
+    print(id(msg.get_valid_words()[0]), id(msg.get_valid_words()[1]))
