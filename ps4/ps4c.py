@@ -1,6 +1,6 @@
 # Problem Set 4C
-# Name: <your name here>
-# Collaborators:
+# Name: Bilin Chen
+# Collaborators: None
 # Time Spent: x:xx
 
 import string
@@ -70,7 +70,8 @@ class SubMessage(object):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        self.message_text = text
+        self.valid_words = load_words(WORDLIST_FILENAME)
     
     def get_message_text(self):
         '''
@@ -78,7 +79,7 @@ class SubMessage(object):
         
         Returns: self.message_text
         '''
-        pass #delete this line and replace with your code here
+        return self.message_text
 
     def get_valid_words(self):
         '''
@@ -87,7 +88,8 @@ class SubMessage(object):
         
         Returns: a COPY of self.valid_words
         '''
-        pass #delete this line and replace with your code here
+        self.valid_words_copy = self.valid_words.copy()
+        return self.valid_words_copy
                 
     def build_transpose_dict(self, vowels_permutation):
         '''
@@ -109,8 +111,19 @@ class SubMessage(object):
                  another letter (string). 
         '''
         
-        pass #delete this line and replace with your code here
-    
+        self.vowels_permutation = vowels_permutation
+        self.dict_cipher = {}
+        
+        for i, vl in enumerate(VOWELS_LOWER):
+            self.dict_cipher[vl] = self.vowels_permutation[i]
+            self.dict_cipher[vl.upper()] = self.vowels_permutation[i].upper()
+
+        for cons in CONSONANTS_LOWER:
+            self.dict_cipher[cons] = cons
+            self.dict_cipher[cons.upper()] = cons.upper()
+        
+        return self.dict_cipher
+
     def apply_transpose(self, transpose_dict):
         '''
         transpose_dict (dict): a transpose dictionary
@@ -118,8 +131,18 @@ class SubMessage(object):
         Returns: an encrypted version of the message text, based 
         on the dictionary
         '''
-        
-        pass #delete this line and replace with your code here
+        self.transpose_dict = transpose_dict
+        self.encrypted_message = ''
+
+        for letter in self.message_text:
+            # check the letter is alphabet and not other character
+            if letter.isalpha():
+                self.encrypted_message += self.transpose_dict[letter]
+            else:
+                self.encrypted_message += letter
+
+        return self.encrypted_message
+
         
 class EncryptedSubMessage(SubMessage):
     def __init__(self, text):
@@ -161,6 +184,8 @@ if __name__ == '__main__':
     message = SubMessage("Hello World!")
     permutation = "eaiuo"
     enc_dict = message.build_transpose_dict(permutation)
+    # print(len(message.build_transpose_dict(permutation)))
+
     print("Original message:", message.get_message_text(), "Permutation:", permutation)
     print("Expected encryption:", "Hallu Wurld!")
     print("Actual encryption:", message.apply_transpose(enc_dict))
