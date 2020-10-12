@@ -1,6 +1,6 @@
 # Problem Set 4B
-# Name: <your name here>
-# Collaborators:
+# Name: Bilin Chen
+# Collaborators: None
 # Time Spent: x:xx
 
 import string
@@ -260,30 +260,31 @@ class CiphertextMessage(Message):
 		and the decrypted message text using that shift value
 		'''
 		
-		
+		# used later to save the best word count when deciphering
 		self.word_count = 0
-		# choose a shift
 
+		# choose a shift
 		for s in range(27):
 			self.shift = 26 - s
-			# create a decipher dict with the shift
-
-			# self.decipher_dict = self.build_shift_dict(self.shift)
-			
+		
 			# apply the shift to all the letters in the text and store it as a string
 			self.message_text_decrypted = self.apply_shift(self.shift)
+			# split the string into words and save into a list so the words can be iterable
 			self.message_text_decrypted_list = self.message_text_decrypted.split()
 			
-			# check if the words are valid
+			# start checking for number of valid words (return True)
 			self.valid_word_count = 0
 			for word in self.message_text_decrypted_list:
+				# check if the words are valid
 				if is_word(self.valid_words, word):
 					self.valid_word_count += 1
 			
+			# Only check if there are any valid words with current shift, and that the total is better than the current word count
 			if self.valid_word_count > 0 and self.valid_word_count > self.word_count:
-				self.word_count = self.valid_word_count
-				self.best_shift = self.shift
-				self.message_text_decrypted_best = self.message_text_decrypted
+				# Save the best values
+				self.word_count = self.valid_word_count		# used for the conditional statement
+				self.best_shift = self.shift 
+				self.message_text_decrypted_best = self.message_text_decrypted 
 
 		return (self.best_shift, self.message_text_decrypted_best)
 
@@ -307,7 +308,6 @@ if __name__ == '__main__':
 #    print('Actual Output:', ciphertext.decrypt_message())
 
 	#TODO: WRITE YOUR TEST CASES HERE
-
 	print('========================')
 	print('Testing PlaintextMessage')
 	print('========================')
