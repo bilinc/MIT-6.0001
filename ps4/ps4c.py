@@ -18,14 +18,14 @@ def load_words(file_name):
     take a while to finish.
     '''
     
-    print("Loading word list from file...")
+    # print("Loading word list from file...")
     # inFile: file
     inFile = open(file_name, 'r')
     # wordlist: list of strings
     wordlist = []
     for line in inFile:
         wordlist.extend([word.lower() for word in line.split(' ')])
-    print("  ", len(wordlist), "words loaded.")
+    # print("  ", len(wordlist), "words loaded.")
     return wordlist
 
 def is_word(word_list, word):
@@ -155,7 +155,7 @@ class EncryptedSubMessage(SubMessage):
             self.message_text (string, determined by input text)
             self.valid_words (list, determined using helper function load_words)
         '''
-        pass #delete this line and replace with your code here
+        SubMessage.__init__(self, text)
 
     def decrypt_message(self):
         '''
@@ -193,3 +193,11 @@ if __name__ == '__main__':
     print("Decrypted message:", enc_message.decrypt_message())
      
     #TODO: WRITE YOUR TEST CASES HERE
+    
+    print("\nTesting SubMessage...\n", "Test 1")
+    message_test1 = SubMessage("I love to program and code!")
+    permutation = "oiuae"
+    enc_dict = message_test1.build_transpose_dict(permutation)
+    print("Original message:", message_test1.get_message_text(), "Permutation:", permutation)
+    print("Expected encryption:", "U lavi ta pragrom ond cadi!")
+    print("Actual encryption:", message_test1.apply_transpose(enc_dict))
