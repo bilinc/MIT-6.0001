@@ -95,6 +95,22 @@ class Trigger(object):
 
 # Problem 2
 # TODO: PhraseTrigger
+class PhraseTrigger(Trigger):
+    """
+    Takes in a string phrase as an argument in the class's constructor.
+    
+    PhraseTrigger has one new method is_phrase_in which takes one string argument. 
+    Returns True or False
+    """
+    def __init__(self, phrase):
+        self.phrase = phrase.lower()
+
+    def is_phrase_in(self, text):
+        self.text = text.lower()
+        self.phrase = self.phrase.replace("!@#$%^&*()-_+={}[]|\:;'<>?,./\"", " ")   # replaces string punctuation with a blankspace
+        
+        # Returns True or False if the entire string phrase is in text
+        return self.phrase in self.text
 
 # Problem 3
 # TODO: TitleTrigger
