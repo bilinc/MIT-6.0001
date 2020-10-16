@@ -108,43 +108,49 @@ class PhraseTrigger(Trigger):
 		# We may assume that a phrase contains no punctuation
 		self.phrase = phrase.lower()
 
-		# self.phrase_temp = ""
-		# for s in phrase:
-		# 	if s not in string.punctuation:
-		# 		self.phrase_temp += s.lower()
-		
-		# self.phrase = self.phrase_temp
 
 	def is_phrase_in(self, text):
+		self.text = text.lower()
 		
-		# self.text_temp = ""
-		# for s in text:
-		# 	if s not in string.punctuation:
-		# 		self.text_temp += s.lower()
+		for s in self.text:
+			if s in string.punctuation:
+				self.text = self.text.replace(s, ' ')
 		
-		# self.text = self.phrase_temp
-		
-		self.text = remove_puncs(text)
+		self.new_text_list = self.text.split()
 
-		# Returns True or False if the entire string phrase is in text
-		return self.phrase in self.text
+		# counts the number of consecutive appearances of the words in phrase in text
+		# returns true if the total count is the same as the number of words in phrase
+		count = 0
+		self.phrase_list = self.phrase.split()
+
+		for i in range(len(self.new_text_list)):			
+			if self.new_text_list[i] == self.phrase_list[count]:
+				count += 1
+
+				if count == len(self.phrase_list):
+					return True
+			else:
+				count = 0
+		return False
 
 # Problem 3
 # TODO: TitleTrigger
-
 class TitleTrigger(PhraseTrigger):
-	def __init__(self, title):
-		self.title = remove_puncs(title)
+	def __init__(self, phrase):
+		PhraseTrigger.__init__(self, phrase)
 
 	def evaluate(self, story):
-		self.story_title = remove_puncs(story.get_title().lower())
+		return self.is_phrase_in(story.get_title())
 
-		if self.title in self.story_title:
-			return True
-		else:
-			return False
 # Problem 4
 # TODO: DescriptionTrigger
+class DescriptionTrigger(PhraseTrigger):
+	def __init__(self, phrase):
+		PhraseTrigger.__init__(self, phrase)
+
+	def evaluate(self, story):
+		return self.is_phrase_in(story.get_description())
+
 
 # TIME TRIGGERS
 
@@ -153,10 +159,39 @@ class TitleTrigger(PhraseTrigger):
 # Constructor:
 #        Input: Time has to be in EST and in the format of "%d %b %Y %H:%M:%S".
 #        Convert time from string to a datetime before saving it as an attribute.
+class TimeTrigger(Trigger):
+	def __init__(self, time_trigger):
+		"""
+		Takes in time as an EST in string format and converts it to a datetime.
+		"""
+		self.time_trigger = datetime.strptime(time_trigger + ' EST', '%d %b %Y %H:%M:%S')
+		# self.time_trigger.replace(tzinfo=pyzt.timezone('EST'))
 
 # Problem 6
 # TODO: BeforeTrigger and AfterTrigger
 
+class BeforeTrigger(TimeTrigger):
+	def __init__(self, time_trigger):
+		TimeTrigger.__init__(self, time_trigger)
+
+	def evaluate(self, story):
+		print('Story datetime:', story.get_pubdate())
+		print('Time trigger:', self.time_trigger)
+
+		if story.get_pubdate() < self.time_trigger:
+			return True
+		else:
+			return False
+
+class AfterTrigger(TimeTrigger):
+	def __init__(self,time_trigger):
+		TimeTrigger.__init__(self, time_trigger)
+
+	def evaluate(self, story):
+		if story.get_pubdate() > self.time_trigger:
+			return True
+		else:
+			return False
 
 # COMPOSITE TRIGGERS
 

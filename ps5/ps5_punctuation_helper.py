@@ -11,8 +11,9 @@ def remove_puncs(text):
 	"""
 	string_temp = ""
 	for s in text:
-		# if s not in string.punctuation:
-		s.strip(string.punctuation)
-		string_temp += s.lower()
-
-	return string_temp
+		if s in string.punctuation:
+			text = text.replace(s, ' ')
+	
+	new_text = ' '.join(text.lower().split())
+	
+	return new_text

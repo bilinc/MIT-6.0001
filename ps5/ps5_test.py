@@ -66,7 +66,7 @@ class ProblemSet5(unittest.TestCase):
         nothing   = NewsStory('', 'I like poison dart frogs.', '', '', datetime.now())
 
         s1 = TitleTrigger('PURPLE COW')
-        s2  = TitleTrigger('purple!! cow')
+        s2  = TitleTrigger('purple cow')
         for trig in [s1, s2]:
             self.assertTrue(trig.evaluate(cuddly), "TitleTrigger failed to fire when the phrase appeared in the title.")
             self.assertTrue(trig.evaluate(exclaim), "TitleTrigger failed to fire when the words were separated by exclamation marks.")
