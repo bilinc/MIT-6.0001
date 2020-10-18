@@ -164,8 +164,8 @@ class TimeTrigger(Trigger):
 		"""
 		Takes in time as an EST in string format and converts it to a datetime.
 		"""
-		self.time_trigger = datetime.strptime(time_trigger + ' EST', '%d %b %Y %H:%M:%S')
-		# self.time_trigger.replace(tzinfo=pyzt.timezone('EST'))
+		self.time_trigger = datetime.strptime(time_trigger, '%d %b %Y %H:%M:%S')
+		self.time_trigger = self.time_trigger.replace(tzinfo=pytz.timezone("EST"))
 
 # Problem 6
 # TODO: BeforeTrigger and AfterTrigger
@@ -175,10 +175,9 @@ class BeforeTrigger(TimeTrigger):
 		TimeTrigger.__init__(self, time_trigger)
 
 	def evaluate(self, story):
-		print('Story datetime:', story.get_pubdate())
-		print('Time trigger:', self.time_trigger)
+		self.story_pubdate = story.get_pubdate().replace(tzinfo=pytz.timezone("EST"))
 
-		if story.get_pubdate() < self.time_trigger:
+		if self.story_pubdate < self.time_trigger:
 			return True
 		else:
 			return False
@@ -188,7 +187,9 @@ class AfterTrigger(TimeTrigger):
 		TimeTrigger.__init__(self, time_trigger)
 
 	def evaluate(self, story):
-		if story.get_pubdate() > self.time_trigger:
+		self.story_pubdate = story.get_pubdate().replace(tzinfo=pytz.timezone("EST"))
+		
+		if self.story_pubdate > self.time_trigger:
 			return True
 		else:
 			return False
