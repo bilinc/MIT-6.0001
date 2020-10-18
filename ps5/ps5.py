@@ -183,7 +183,7 @@ class BeforeTrigger(TimeTrigger):
 			return False
 
 class AfterTrigger(TimeTrigger):
-	def __init__(self,time_trigger):
+	def __init__(self, time_trigger):
 		TimeTrigger.__init__(self, time_trigger)
 
 	def evaluate(self, story):
@@ -198,6 +198,17 @@ class AfterTrigger(TimeTrigger):
 
 # Problem 7
 # TODO: NotTrigger
+
+class NotTrigger(Trigger):
+	def __init__(self, other_trigger):
+		# Takes another trigger as argument in its constructor
+		self.other_trigger = other_trigger
+
+	def evaluate(self, story):
+		# returns the not value of the other trigger for a news item 'story'
+		return not self.other_trigger.evaluate(story)
+		
+
 
 # Problem 8
 # TODO: AndTrigger
