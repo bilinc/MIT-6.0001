@@ -247,9 +247,15 @@ def filter_stories(stories, triggerlist):
 	Returns: a list of only the stories for which a trigger in triggerlist fires.
 	"""
 	# TODO: Problem 10
-	# This is a placeholder
-	# (we're just returning all the stories, with no filtering)
-	return stories
+
+	stories_triggered = []
+	for trigger in triggerlist:
+		for story in stories:
+			# Checks if a trigger can fire on a story in the list, if it does save the story in a new list
+			if trigger.evaluate(story):
+				stories_triggered.append(story)
+
+	return stories_triggered
 
 
 
