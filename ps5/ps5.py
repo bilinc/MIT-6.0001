@@ -263,6 +263,27 @@ def filter_stories(stories, triggerlist):
 # User-Specified Triggers
 #======================
 # Problem 11
+# Helper function
+def create_trigger(config, trigger_dict):
+	"""
+	config: a string containing information on how the title should be created
+	
+	Returns: the requested trigger object
+	"""
+	config = config.split(',')
+	keyword = config[1]	# Second element in the configuration
+	type_info = config[2]
+
+	# Now I'm instantiating all classes, and some of them will have incorrect values. I only want to instantiate the right class at the right time.
+	keyword_dict = {'TITLE':TitleTrigger(type_info), 'DESCRIPTION':DescriptionTrigger(type_info), 'AFTER':AfterTrigger(type_info), 'BEFORE':BeforeTrigger(type_info), 'NOT':NotTrigger(type_info), 'AND':AndTrigger(trigger_dict[config[2]], trigger_dict[config[3]]), 'OR':OrTrigger(trigger_dict[config[2]], trigger_dict[config[3]])}
+	
+	trigger = []
+	
+	if keyword in keyword_dict.keys():
+		trigger_object = keyword_dict[keyword]
+
+	return trigger_object
+
 def read_trigger_config(filename):
 	"""
 	filename: the name of a trigger configuration file
@@ -282,10 +303,24 @@ def read_trigger_config(filename):
 	# TODO: Problem 11
 	# line is the list of lines that you need to parse and for which you need
 	# to build triggers
+	
+	# dictionary hint: key: trigger name, value: trigger object
+	trigger_name = {}
+	triggerlist = []
+	for item in lines:
+		if item[0] != 'ADD':
+			trigger_name[item[0]] = create_trigger(item, trigger_name)
+		elif item[0] == 'ADD':
+			item = item.split()
+			for i in range(len(item[1:])):
+				triggerlist.append(item[i])
 
 	print(lines) # for now, print it so you see what it contains!
+	print(triggerlist)
 
+	return triggerlist
 
+read_trigger_config('triggers.txt')
 
 SLEEPTIME = 120 #seconds -- how often we poll
 
