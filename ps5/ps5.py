@@ -266,18 +266,28 @@ def filter_stories(stories, triggerlist):
 # Helper function
 def create_trigger(config, trigger_dict):
 	"""
-	config: a string containing information on how the title should be created
+	config: a list containing information on how the title should be created
 	
 	Returns: the requested trigger object
 	"""
-	config = config.split(',')
+
 	keyword = config[1]	# Second element in the configuration
 	type_info = config[2]
-
-	# Now I'm instantiating all classes, and some of them will have incorrect values. I only want to instantiate the right class at the right time.
-	keyword_dict = {'TITLE':TitleTrigger(type_info), 'DESCRIPTION':DescriptionTrigger(type_info), 'AFTER':AfterTrigger(type_info), 'BEFORE':BeforeTrigger(type_info), 'NOT':NotTrigger(type_info), 'AND':AndTrigger(trigger_dict[config[2]], trigger_dict[config[3]]), 'OR':OrTrigger(trigger_dict[config[2]], trigger_dict[config[3]])}
 	
-	trigger = []
+	type_info_phrase = ['TITLE', 'DESCRIPTION']
+	type_info_date = ['AFTER', 'BEFORE']
+	type_info_trigger = ['NOT', 'AND', 'OR']
+	
+	# only create a trigger if the keyword matches a specific type
+	# this is to avoid value errors
+	if keyword in type_info_phrase:
+		keyword_dict = {'TITLE':TitleTrigger(type_info), 'DESCRIPTION':DescriptionTrigger(type_info)}
+	
+	elif keyword in type_info_date:
+		keyword_dict = {'AFTER':AfterTrigger(type_info), 'BEFORE':BeforeTrigger(type_info)}
+	
+	elif keyword in type_info_trigger:
+		keyword_dict = {'NOT':NotTrigger(trigger_dict[config[2]]), 'AND':AndTrigger(trigger_dict[config[2]], trigger_dict[config[3]]), 'OR':OrTrigger(trigger_dict[config[2]], trigger_dict[config[3]])}
 	
 	if keyword in keyword_dict.keys():
 		trigger_object = keyword_dict[keyword]
@@ -300,6 +310,9 @@ def read_trigger_config(filename):
 		if not (len(line) == 0 or line.startswith('//')):
 			lines.append(line)
 
+	# How lines looks like:
+	# ['t1,TITLE,election', 't2,DESCRIPTION,Trump', 't3,DESCRIPTION,Clinton', 't4,AFTER,3 Oct 2016 17:00:10', 't5,AND,t2,t3', 't6,AND,t1,t4', 'ADD,t5,t6']
+
 	# TODO: Problem 11
 	# line is the list of lines that you need to parse and for which you need
 	# to build triggers
@@ -307,16 +320,21 @@ def read_trigger_config(filename):
 	# dictionary hint: key: trigger name, value: trigger object
 	trigger_name = {}
 	triggerlist = []
+	
 	for item in lines:
-		if item[0] != 'ADD':
-			trigger_name[item[0]] = create_trigger(item, trigger_name)
-		elif item[0] == 'ADD':
-			item = item.split()
-			for i in range(len(item[1:])):
-				triggerlist.append(item[i])
+		item_list = item.split(',')
+		
+		if item_list[0] != 'ADD':
+			# set trigger name as key, and calling the 'create trigger' function which returns a trigger saved as dict value
+			trigger_name[item_list[0]] = create_trigger(item_list, trigger_name)
+		
+		# if the first keyword is 'ADD' call the trigger in trigger_name and append the trigger in the list
+		elif item_list[0] == 'ADD':
+			for i in range(len(item_list[1:])):
+				triggerlist.append(trigger_name[item_list[i+1]])
 
-	print(lines) # for now, print it so you see what it contains!
-	print(triggerlist)
+	# print(lines) # for now, print it so you see what it contains!
+	# print(triggerlist)
 
 	return triggerlist
 
@@ -368,14 +386,15 @@ def main_thread(master):
 		while True:
 
 			print("Polling . . .", end=' ')
+			
 			# Get stories from Google's Top Stories RSS news feed
 			stories = process("http://news.google.com/news?output=rss")
 
 			# Get stories from Yahoo's Top Stories RSS news feed
-			stories.extend(process("http://news.yahoo.com/rss/topstories"))
+			# stories.extend(process("http://news.yahoo.com/rss/topstories"))
+			print('hello poll')
 
 			stories = filter_stories(stories, triggerlist)
-
 			list(map(get_cont, stories))
 			scrollbar.config(command=cont.yview)
 
